@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Police Abuse of Power in Malaysia — Public Tracker</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #232737;
+    --border: #2e3347;
+    --text: #e4e6f0;
+    --text-muted: #8b8fa3;
+    --accent: #e85d4a;
+    --accent2: #f0a030;
+    --accent3: #4a9de8;
+    --green: #4caf80;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background:var(--bg); color:var(--text); line-height:1.6; }
+  a { color:var(--accent3); text-decoration:none; }
+  a:hover { text-decoration:underline; }
+
+  /* Header */
+  .hero {
+    background: linear-gradient(135deg, #1a1020 0%, #1a1525 50%, #15121f 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 3rem 1.5rem 2rem;
+    text-align: center;
+  }
+  .hero h1 { font-size:2rem; font-weight:700; margin-bottom:0.5rem; letter-spacing:-0.5px; }
+  .hero h1 span { color:var(--accent); }
+  .hero p { color:var(--text-muted); max-width:680px; margin:0 auto; font-size:0.95rem; }
+  .hero .disclaimer {
+    margin-top:1rem; padding:0.75rem 1rem; background:rgba(232,93,74,0.08);
+    border:1px solid rgba(232,93,74,0.2); border-radius:8px; font-size:0.82rem;
+    color:var(--text-muted); max-width:700px; margin-left:auto; margin-right:auto;
+  }
+
+  /* Stats bar */
+  .stats-bar {
+    display:flex; flex-wrap:wrap; gap:1rem; justify-content:center;
+    padding:1.5rem; background:var(--surface); border-bottom:1px solid var(--border);
+  }
+  .stat-card {
+    background:var(--surface2); border:1px solid var(--border); border-radius:10px;
+    padding:1rem 1.5rem; min-width:160px; text-align:center;
+  }
+  .stat-card .num { font-size:1.8rem; font-weight:700; }
+  .stat-card .label { font-size:0.78rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; }
+  .stat-card.red .num { color:var(--accent); }
+  .stat-card.orange .num { color:var(--accent2); }
+  .stat-card.blue .num { color:var(--accent3); }
+  .stat-card.green .num { color:var(--green); }
+
+  /* Controls */
+  .controls {
+    padding:1.25rem 1.5rem; background:var(--surface); border-bottom:1px solid var(--border);
+    display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center; justify-content:center;
+  }
+  .controls input, .controls select {
+    background:var(--surface2); color:var(--text); border:1px solid var(--border);
+    padding:0.6rem 1rem; border-radius:8px; font-size:0.9rem; outline:none;
+  }
+  .controls input { min-width:280px; }
+  .controls input:focus, .controls select:focus { border-color:var(--accent3); }
+  .controls select { cursor:pointer; }
+
+  /* Category pills */
+  .cat-pills { display:flex; flex-wrap:wrap; gap:0.5rem; justify-content:center; padding:1rem 1.5rem; }
+  .pill {
+    padding:0.35rem 0.9rem; border-radius:20px; font-size:0.8rem; cursor:pointer;
+    border:1px solid var(--border); background:var(--surface2); color:var(--text-muted);
+    transition: all 0.15s;
+  }
+  .pill:hover, .pill.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+
+  /* Incident list */
+  .container { max-width:1100px; margin:0 auto; padding:1.5rem; }
+  .result-count { font-size:0.85rem; color:var(--text-muted); margin-bottom:1rem; }
+
+  .incident {
+    background:var(--surface); border:1px solid var(--border); border-radius:12px;
+    padding:1.5rem; margin-bottom:1rem; transition: border-color 0.2s;
+  }
+  .incident:hover { border-color: var(--accent3); }
+  .incident-header { display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center; margin-bottom:0.75rem; }
+  .incident-date { font-size:0.8rem; color:var(--accent2); font-weight:600; white-space:nowrap; }
+  .incident-title { font-size:1.1rem; font-weight:600; flex:1; min-width:200px; }
+  .incident-badges { display:flex; flex-wrap:wrap; gap:0.4rem; }
+  .badge {
+    padding:0.2rem 0.6rem; border-radius:12px; font-size:0.7rem; font-weight:600;
+    text-transform:uppercase; letter-spacing:0.3px;
+  }
+  .badge-death { background:rgba(232,93,74,0.15); color:#f27060; }
+  .badge-torture { background:rgba(180,70,200,0.15); color:#c580e0; }
+  .badge-shooting { background:rgba(240,160,48,0.15); color:#f0a030; }
+  .badge-excessive { background:rgba(74,157,232,0.15); color:#6ab4f0; }
+  .badge-corruption { background:rgba(76,175,128,0.15); color:#6cc090; }
+  .badge-assault { background:rgba(232,180,74,0.15); color:#e8c060; }
+  .badge-wrongful { background:rgba(160,120,200,0.15); color:#b090d0; }
+
+  .incident-meta { display:flex; flex-wrap:wrap; gap:1rem; font-size:0.82rem; color:var(--text-muted); margin-bottom:0.75rem; }
+  .incident-meta span::before { margin-right:0.3rem; }
+  .incident-desc { font-size:0.9rem; color:var(--text-muted); line-height:1.65; margin-bottom:0.75rem; }
+  .incident-status { font-size:0.78rem; }
+  .status-tag {
+    display:inline-block; padding:0.15rem 0.5rem; border-radius:8px; font-size:0.72rem;
+    font-weight:600; text-transform:uppercase;
+  }
+  .status-no-action { background:rgba(232,93,74,0.12); color:#f07060; }
+  .status-investigated { background:rgba(240,160,48,0.12); color:#e8b060; }
+  .status-charged { background:rgba(74,157,232,0.12); color:#70b4f0; }
+  .status-convicted { background:rgba(76,175,128,0.12); color:#60c090; }
+  .status-acquitted { background:rgba(160,120,200,0.12); color:#b090d0; }
+  .status-pending { background:rgba(140,140,160,0.12); color:#a0a0b0; }
+  .status-civil-awarded { background:rgba(76,175,128,0.12); color:#60c090; }
+
+  .incident-sources { margin-top:0.5rem; font-size:0.78rem; }
+  .incident-sources a { margin-right:0.75rem; }
+
+  /* Timeline chart */
+  .chart-section { padding:2rem 1.5rem; background:var(--surface); border-radius:12px; margin-bottom:2rem; border:1px solid var(--border); }
+  .chart-section h2 { font-size:1.1rem; margin-bottom:1rem; }
+  .chart-bar-container { display:flex; align-items:flex-end; gap:6px; height:180px; padding-top:1rem; }
+  .chart-col { display:flex; flex-direction:column; align-items:center; flex:1; }
+  .chart-bar {
+    width:100%; max-width:50px; background: linear-gradient(180deg, var(--accent) 0%, rgba(232,93,74,0.4) 100%);
+    border-radius:4px 4px 0 0; transition: height 0.4s ease; min-height:2px;
+  }
+  .chart-label { font-size:0.7rem; color:var(--text-muted); margin-top:0.4rem; writing-mode:vertical-rl; text-orientation:mixed; }
+  .chart-val { font-size:0.7rem; color:var(--accent); margin-bottom:0.25rem; }
+
+  /* Footer */
+  footer {
+    text-align:center; padding:2rem 1.5rem; border-top:1px solid var(--border);
+    color:var(--text-muted); font-size:0.82rem;
+  }
+  footer a { color:var(--accent3); }
+
+  /* No results */
+  .no-results { text-align:center; padding:3rem 1rem; color:var(--text-muted); }
+
+  /* Modal */
+  .modal-overlay {
+    display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7);
+    z-index:1000; justify-content:center; align-items:center; padding:1rem;
+  }
+  .modal-overlay.open { display:flex; }
+  .modal {
+    background:var(--surface); border:1px solid var(--border); border-radius:16px;
+    max-width:700px; width:100%; max-height:85vh; overflow-y:auto; padding:2rem;
+  }
+  .modal h2 { font-size:1.3rem; margin-bottom:0.5rem; }
+  .modal .close-btn {
+    float:right; background:none; border:none; color:var(--text-muted);
+    font-size:1.5rem; cursor:pointer; line-height:1;
+  }
+  .modal .close-btn:hover { color:var(--text); }
+
+  /* Google Sheets banner */
+  .sheets-banner {
+    background: linear-gradient(135deg, rgba(74,157,232,0.08), rgba(76,175,128,0.08));
+    border:1px solid rgba(74,157,232,0.2); border-radius:12px;
+    padding:1.25rem 1.5rem; margin-bottom:2rem; text-align:center;
+  }
+  .sheets-banner p { font-size:0.88rem; color:var(--text-muted); }
+  .sheets-banner code { background:var(--surface2); padding:0.15rem 0.4rem; border-radius:4px; font-size:0.82rem; color:var(--accent3); }
+
+  @media (max-width:640px) {
+    .hero h1 { font-size:1.4rem; }
+    .controls input { min-width:100%; }
+    .stat-card { min-width:130px; padding:0.75rem 1rem; }
+    .stat-card .num { font-size:1.4rem; }
+    .incident { padding:1rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>Police <span>Abuse of Power</span> in Malaysia</h1>
+  <p>A public tracker documenting incidents of police misconduct, custodial deaths, excessive force, and corruption in Malaysia — sourced from verified news reports, court records, and human rights organisations.</p>
+  <div class="disclaimer">
+    <strong>Disclaimer:</strong> All incidents listed are based on publicly available news reports, court documents, and reports from recognised human rights organisations. Inclusion does not imply a finding of guilt. Where outcomes are known, they are noted.
+  </div>
+</div>
+
+<div class="stats-bar" id="statsBar"></div>
+
+<div class="controls">
+  <input type="text" id="searchBox" placeholder="Search by name, location, keyword..." />
+  <select id="yearFilter"><option value="">All Years</option></select>
+  <select id="stateFilter"><option value="">All States</option></select>
+  <select id="statusFilter">
+    <option value="">All Outcomes</option>
+    <option value="No Action">No Action Taken</option>
+    <option value="Under Investigation">Under Investigation</option>
+    <option value="Charged">Charged</option>
+    <option value="Acquitted">Acquitted</option>
+    <option value="Convicted">Convicted</option>
+    <option value="Civil Damages Awarded">Civil Damages Awarded</option>
+  </select>
+</div>
+
+<div class="cat-pills" id="catPills"></div>
+
+<div class="container">
+  <div class="sheets-banner" id="sheetsBanner" style="display:none;">
+    <p><strong>Live Data Mode:</strong> This tracker is reading from a Google Sheet. To add new incidents, edit the sheet directly.</p>
+  </div>
+
+  <div id="chartSection" class="chart-section">
+    <h2>Documented Incidents by Year</h2>
+    <div class="chart-bar-container" id="yearChart"></div>
+  </div>
+
+  <div class="result-count" id="resultCount"></div>
+  <div id="incidentList"></div>
+</div>
+
+<!-- Detail Modal -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <button class="close-btn" onclick="closeModal()">&times;</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<footer>
+  <p>Built for public accountability. Data sourced from news reports by <a href="https://www.freemalaysiatoday.com" target="_blank">FMT</a>, <a href="https://www.malaysiakini.com" target="_blank">Malaysiakini</a>, <a href="https://www.malaymail.com" target="_blank">Malay Mail</a>, <a href="https://www.hrw.org" target="_blank">Human Rights Watch</a>, <a href="https://www.amnesty.org" target="_blank">Amnesty International</a>, and others.</p>
+  <p style="margin-top:0.5rem;">Want to contribute data? <a href="#" onclick="alert('Instructions: Make a copy of the Google Sheets template, add your incidents, and share the link with the site maintainer.')">Learn how</a></p>
+</footer>
+
+<script>
+// ============================================================
+// DATA — Replace this array with a Google Sheets fetch if desired
+// ============================================================
+const INCIDENTS = [
+  {
+    id: 1,
+    date: "2013-05-21",
+    title: "N. Dharmendran — Tortured to Death in Police Custody",
+    category: "Custodial Death",
+    state: "Kuala Lumpur",
+    location: "KL Police Contingent HQ",
+    victim: "N. Dharmendran",
+    description: "N. Dharmendran, arrested on 11 May 2013, was found dead at the Kuala Lumpur police contingent headquarters ten days later. A pathologist found 52 bruises on his body from excessive physical force, causing massive blood loss and hypovolemic shock. Staple wounds were found on each ear. The EAIC found police officers fabricated evidence to cover up the interrogation.",
+    status: "Acquitted",
+    statusDetail: "Four police officers were charged with murder but acquitted by the High Court in 2014. In a separate civil suit, the KL High Court found the police and government liable and awarded RM440,200 in damages.",
+    sources: [
+      { name: "Amnesty International", url: "https://www.amnesty.org/en/latest/press-release/2016/06/malaysia-police-elude-accountability/" },
+      { name: "Malay Mail", url: "https://www.malaymail.com/news/malaysia/2016/04/28/eaic-police-officers-beat-dharmendran-to-death-during-violent-interrogation/1109089" },
+      { name: "Malaysiakini", url: "https://www.malaysiakini.com/news/503128" }
+    ]
+  },
+  {
+    id: 2,
+    date: "2007-11-10",
+    title: "Bersih 1.0 Rally — Tear Gas and Water Cannon on Protesters",
+    category: "Excessive Force",
+    state: "Kuala Lumpur",
+    location: "Masjid Jamek / Dataran Merdeka area",
+    victim: "Rally participants (estimated 30,000–50,000)",
+    description: "Police deployed chemical-laced water cannons and tear gas at Bersih rally participants at the Masjid Jamek and Bandaraya LRT meeting points without giving prior warning or dispersal orders. Officers kicked and beat at least seven people. The Coalition for Clean and Fair Elections had called for electoral reforms.",
+    status: "No Action",
+    statusDetail: "No officers were disciplined or charged for excessive force during the rally.",
+    sources: [
+      { name: "Human Rights Watch", url: "https://www.hrw.org/news/2007/11/15/malaysia-investigate-use-force-against-peaceful-rally" }
+    ]
+  },
+  {
+    id: 3,
+    date: "2011-07-09",
+    title: "Bersih 2.0 Rally — 1,667 Arrested, Tear Gas Deployed",
+    category: "Excessive Force",
+    state: "Kuala Lumpur",
+    location: "Central Kuala Lumpur",
+    victim: "1,667 arrested; dozens injured",
+    description: "Malaysian authorities fired tear gas and arrested over 1,667 people during the Bersih 2.0 rally demanding free and fair elections. The crackdown drew international condemnation.",
+    status: "No Action",
+    statusDetail: "No accountability for the mass arrests or use of force against peaceful protesters.",
+    sources: [
+      { name: "CNN", url: "https://www.cnn.com/2011/WORLD/asiapcf/07/09/malaysia.protests/index.html" }
+    ]
+  },
+  {
+    id: 4,
+    date: "2012-04-28",
+    title: "Bersih 3.0 Rally — Police Brutality Documented by Bar Council",
+    category: "Excessive Force",
+    state: "Kuala Lumpur",
+    location: "Dataran Merdeka area",
+    victim: "471+ arrested; dozens injured",
+    description: "Human Rights Watch observed police using tear gas and water cannons against peaceful participants. 909 tear gas canisters and 58 tear gas grenades were fired, including at crowds far from any breach. The Malaysian Bar Council's interim report described widespread savage beatings of civilians and arbitrary use of force.",
+    status: "No Action",
+    statusDetail: "Despite the Bar Council report and HRW documentation, no officers were held accountable.",
+    sources: [
+      { name: "Human Rights Watch", url: "https://www.hrw.org/news/2012/04/29/malaysia-excessive-force-used-disperse-peaceful-protests" },
+      { name: "Al Jazeera", url: "https://www.aljazeera.com/news/2012/4/28/police-violence-marks-malaysia-reform-rally" }
+    ]
+  },
+  {
+    id: 5,
+    date: "2019-05-15",
+    title: "S. Mahendran — Tortured for 13 Hours in Police Custody",
+    category: "Torture",
+    state: "Kuala Lumpur",
+    location: "Sentul Police HQ",
+    victim: "S. Mahendran, 30",
+    description: "S. Mahendran surrendered himself to Sentul police HQ on suspicion of armed robbery. He was then assaulted, tasered, forced to lie naked on ice cubes, and had chilli paste rubbed on his genitals to coerce a confession. Officers threatened to rape his daughter and mother. The torture lasted 13 hours. The internal investigation was conducted by the same police station.",
+    status: "Under Investigation",
+    statusDetail: "The case was investigated by the same police station that committed the alleged torture. Outcome unclear from public reports.",
+    sources: [
+      { name: "Malay Mail", url: "https://www.malaymail.com/news/malaysia/2019/05/18/kl-man-claims-he-was-assaulted-tasered-and-abused-with-chilli-on-genitals-w/1754292" },
+      { name: "Free Malaysia Today", url: "https://www.freemalaysiatoday.com/category/nation/2019/05/19/take-over-latest-torture-complaint-bukit-aman-told/" }
+    ]
+  },
+  {
+    id: 6,
+    date: "2021-01-28",
+    title: "Mohd Afis Ahmad — Blunt Force Trauma Death in Custody",
+    category: "Custodial Death",
+    state: "Kedah",
+    location: "Yan Police Station",
+    victim: "Mohd Afis Ahmad, 31",
+    description: "Mohd Afis Ahmad was arrested on 27 January under Sections 379 and 170 of the Penal Code. Police claimed he put up a struggle during arrest causing facial injuries. He was found unconscious in custody at 12:30am the next day and pronounced dead at 1:10am at Yan Hospital. Post-mortem revealed death due to blunt force trauma to the head. NGOs questioned why he was not sent for medical treatment if police knew he was injured.",
+    status: "Under Investigation",
+    statusDetail: "The Kedah police chief promised a thorough probe. Amnesty International and other groups demanded an independent investigation.",
+    sources: [
+      { name: "Malay Mail", url: "https://www.malaymail.com/news/malaysia/2021/02/05/kedah-police-chief-promises-thorough-probe-into-custodial-death/1947076" },
+      { name: "Free Malaysia Today", url: "https://www.freemalaysiatoday.com/category/nation/2021/02/05/kedah-cops-ignored-the-rules-in-lock-up-death-says-ngo/" },
+      { name: "Amnesty Malaysia", url: "https://www.amnesty.my/2021/02/10/deaths-and-rape-in-police-custody-reinforce-the-need-for-independent-oversight-commission/" }
+    ]
+  },
+  {
+    id: 7,
+    date: "2021-04-28",
+    title: "A. Ganapathy — Beaten with Rubber Hose, Died in Hospital",
+    category: "Custodial Death",
+    state: "Selangor",
+    location: "Gombak Police Station / Selayang Hospital",
+    victim: "A. Ganapathy, 40",
+    description: "A. Ganapathy, a milk trader, was arrested on 24 February to assist in an investigation involving his brother. After 12 days in custody at Gombak police station, he was admitted to Selayang Hospital ICU. He was allegedly beaten with a rubber hose throughout his detention. His lawyer's independent autopsy found injuries to shoulders and legs. He died of sepsis. The police chief denied any evidence of assault. #JusticeForGanapathy trended nationwide.",
+    status: "Under Investigation",
+    statusDetail: "Eighteen youth groups called for a public inquiry. The Malaysian Bar demanded an independent investigation and inquest. The Gombak police chief denied assault.",
+    sources: [
+      { name: "Free Malaysia Today", url: "https://www.freemalaysiatoday.com/category/nation/2021/04/30/social-media-outrage-over-ganapathys-death-in-police-custody" },
+      { name: "Malay Mail", url: "https://www.malaymail.com/news/malaysia/2021/04/29/eighteen-youth-groups-call-for-public-inquiry-after-yet-another-death-in-ma/1970326" },
+      { name: "Malaysian Bar", url: "https://www.malaysianbar.org.my/article/news/press-statements/press-statements/press-release-reform-police-custody-practices-now" }
+    ]
+  },
+  {
+    id: 8,
+    date: "2022-01-01",
+    title: "2022 Custodial Deaths — 24 Deaths Across Malaysia",
+    category: "Custodial Death",
+    state: "Nationwide",
+    location: "Multiple locations",
+    victim: "24 individuals",
+    description: "In 2022, 24 people died under police custody across Malaysia. 11 died in lock-ups and 13 during medical treatment or transport to hospitals. Seven deaths occurred in just the first two months, in Kuantan, Klang, Penang, Terengganu, Kota Bharu, Taiping, and Kuala Kangsar. USJKT found criminal elements in two cases: one in Taiping (Perak) and one in Kelantan. SUARAM documented 21 custodial deaths including four from police shootings.",
+    status: "Under Investigation",
+    statusDetail: "The Criminal Investigation Unit for Deaths in Custody (USJKT) found two cases with criminal elements. Most cases had no public accountability outcomes.",
+    sources: [
+      { name: "Malay Mail", url: "https://www.malaymail.com/news/malaysia/2022/12/06/suaram-21-custodial-deaths-this-year-four-from-police-shootings/43813" },
+      { name: "The Edge Malaysia", url: "https://theedgemalaysia.com/node/657102" }
+    ]
+  },
+  {
+    id: 9,
+    date: "2022-06-01",
+    title: "Kumar Selvadurai — Died in Custody, Family Not Notified for Months",
+    category: "Custodial Death",
+    state: "Penang",
+    location: "Penang",
+    victim: "Kumar Selvadurai",
+    description: "Kumar Selvadurai was arrested by police in Penang and died while in custody. His family claimed they were not informed of his death by the police for nearly two months, raising serious concerns about transparency and accountability in custodial death reporting.",
+    status: "No Action",
+    statusDetail: "No public record of officers being disciplined or charged. The failure to notify the family highlights systemic transparency gaps.",
+    sources: [
+      { name: "Malaysiakini", url: "https://www.malaysiakini.com/letters/671088" }
+    ]
+  },
+  {
+    id: 10,
+    date: "2015-01-01",
+    title: "327 Fatal Police Shootings (2015–2025)",
+    category: "Fatal Shooting",
+    state: "Nationwide",
+    location: "193 incidents across Malaysia",
+    victim: "327 individuals killed",
+    description: "Between 2015 and 2025, a total of 327 suspects were killed by police in 193 shooting incidents across Malaysia, as revealed in Parliament in February 2026. In 2024 alone, there were 35 shooting incidents across 11 states involving 75 individuals, with 36 killed — a sharp rise from 5 incidents in 2023. The Malaysian Bar has repeatedly called for independent investigations into each fatal shooting.",
+    status: "Under Investigation",
+    statusDetail: "Parliament was informed of these statistics in February 2026. The IPCC and Malaysian Bar have called for independent reviews of each incident.",
+    sources: [
+      { name: "Malay Mail", url: "https://www.malaymail.com/news/malaysia/2026/02/11/parliament-told-327-suspects-killed-in-police-shootings-since-2015/208810" },
+      { name: "The Star", url: "https://www.thestar.com.my/news/nation/2026/02/11/327-criminals-shot-dead-by-cops-since-2015-dewan-rakyat-told" }
+    ]
+  },
+  {
+    id: 11,
+    date: "2025-04-14",
+    title: "Seremban Kidnapping Case — 21-Year-Old Suspect Shot Dead",
+    category: "Fatal Shooting",
+    state: "Selangor",
+    location: "Klang, Selangor",
+    victim: "Unnamed 21-year-old suspect",
+    description: "During a pursuit related to a kidnapping case in Seremban, a 21-year-old suspect was fatally shot by police in Klang after allegedly failing to comply with orders, driving against traffic, and crashing into a police car. The Malaysian Bar expressed concern about the use of lethal force and called for a thorough independent investigation, noting the sharp rise in fatal police shootings in 2024.",
+    status: "Under Investigation",
+    statusDetail: "The Malaysian Bar called for a thorough probe. Six other suspects were arrested. The case highlighted broader concerns about police use of lethal force.",
+    sources: [
+      { name: "Malaysian Bar", url: "https://www.malaysianbar.org.my/article/about-us/president-s-corner/pressstatements/press-release-the-malaysian-bar-calls-for-a-thorough-investigation-into-fatal-police-shooting-in-seremban-kidnapping-case" },
+      { name: "Free Malaysia Today", url: "https://www.freemalaysiatoday.com/category/nation/2025/04/14/suspect-in-kidnapping-case-killed-in-police-shootout-in-klang" }
+    ]
+  },
+  {
+    id: 12,
+    date: "2025-01-01",
+    title: "79 Police Officers Reported for Corruption (Jan–Sep 2025)",
+    category: "Corruption",
+    state: "Nationwide",
+    location: "Multiple locations",
+    victim: "Public trust",
+    description: "From January to September 2025, 79 out of 1,022 corruption cases reported to MACC involved Royal Malaysia Police officers and personnel. Additionally, 1,523 disciplinary investigations were opened against police, including 47 corruption-related cases. The Inspector-General of Police disclosed these figures publicly.",
+    status: "Under Investigation",
+    statusDetail: "Cases are being investigated by the Malaysian Anti-Corruption Commission (MACC). 496 officers faced disciplinary action in the first five months of 2023 alone, including 34 dismissals.",
+    sources: [
+      { name: "The Vibes", url: "https://www.thevibes.com/articles/news/115456/79-police-officers-among-corruption-cases-reported-to-macc" }
+    ]
+  },
+  {
+    id: 13,
+    date: "2002-01-01",
+    title: "257 Custodial Deaths (2002–2016) — Systemic Pattern",
+    category: "Custodial Death",
+    state: "Nationwide",
+    location: "Nationwide",
+    victim: "257 individuals (only 62 publicly reported per SUARAM)",
+    description: "Between 2002 and 2016, there were 257 deaths in police custody according to official records, but human rights group SUARAM reported that only 62 cases were ever publicly disclosed. This discrepancy highlights severe transparency issues in reporting custodial deaths in Malaysia. Very few cases resulted in inquests, and virtually none led to criminal convictions of officers.",
+    status: "No Action",
+    statusDetail: "Despite the scale, no systemic reform was implemented during this period. SUARAM and other groups have demanded greater data transparency.",
+    sources: [
+      { name: "Human Rights Pulse", url: "https://www.humanrightspulse.com/mastercontentblog/addressing-police-maltreatment-in-malaysia" },
+      { name: "Malaysiakini News Lab", url: "https://newslab.malaysiakini.com/custodial-death/en" }
+    ]
+  },
+  {
+    id: 14,
+    date: "2014-04-01",
+    title: "HRW Report: 'No Answers, No Apology' — 15+ Cases Documented",
+    category: "Excessive Force",
+    state: "Nationwide",
+    location: "Nationwide",
+    victim: "Multiple victims",
+    description: "Human Rights Watch published 'No Answers, No Apology', documenting more than 15 cases of police abuse in Malaysia since 2009, including unjustified shootings, mistreatment in custody, and excessive force during public assemblies. The report found that investigations into police abuse are conducted primarily by the police themselves, lack transparency, and almost never result in prosecution.",
+    status: "No Action",
+    statusDetail: "HRW called for the creation of an independent police complaints commission with enforcement powers. As of 2025, the IPCC established lacks prosecutorial power.",
+    sources: [
+      { name: "Human Rights Watch", url: "https://www.hrw.org/report/2014/04/01/no-answers-no-apology/police-abuses-and-accountability-malaysia" },
+      { name: "HRW Summary", url: "https://www.hrw.org/news/2014/04/01/malaysia-end-police-abuses" }
+    ]
+  }
+];
+
+// ============================================================
+// GOOGLE SHEETS INTEGRATION (Optional — uncomment to enable)
+// ============================================================
+// To use Google Sheets as your data source:
+// 1. Create a Google Sheet with columns: date, title, category, state, location, victim, description, status, statusDetail, source1_name, source1_url, source2_name, source2_url, source3_name, source3_url
+// 2. Publish the sheet: File > Share > Publish to web > CSV
+// 3. Replace the URL below with your published CSV URL
+// 4. Uncomment the loadFromGoogleSheets() call at the bottom
+//
+// const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/YOUR_SHEET_ID/pub?output=csv";
+//
+// async function loadFromGoogleSheets() {
+//   try {
+//     const res = await fetch(SHEET_CSV_URL);
+//     const csv = await res.text();
+//     const rows = csv.split('\n').map(r => r.split(','));
+//     const headers = rows[0].map(h => h.trim().replace(/"/g,''));
+//     INCIDENTS.length = 0;
+//     for (let i = 1; i < rows.length; i++) {
+//       const row = rows[i];
+//       if (row.length < 7) continue;
+//       const obj = {};
+//       headers.forEach((h, idx) => obj[h] = (row[idx]||'').replace(/^"|"$/g,'').trim());
+//       const sources = [];
+//       if (obj.source1_url) sources.push({ name: obj.source1_name || 'Source', url: obj.source1_url });
+//       if (obj.source2_url) sources.push({ name: obj.source2_name || 'Source', url: obj.source2_url });
+//       if (obj.source3_url) sources.push({ name: obj.source3_name || 'Source', url: obj.source3_url });
+//       INCIDENTS.push({
+//         id: i, date: obj.date, title: obj.title, category: obj.category,
+//         state: obj.state, location: obj.location, victim: obj.victim,
+//         description: obj.description, status: obj.status, statusDetail: obj.statusDetail,
+//         sources
+//       });
+//     }
+//     document.getElementById('sheetsBanner').style.display = 'block';
+//     init();
+//   } catch(e) { console.error('Sheet load failed, using embedded data:', e); init(); }
+// }
+
+// ============================================================
+// APP LOGIC
+// ============================================================
+const CATEGORIES = [...new Set(INCIDENTS.map(i => i.category))].sort();
+const BADGE_MAP = {
+  "Custodial Death": "badge-death",
+  "Torture": "badge-torture",
+  "Fatal Shooting": "badge-shooting",
+  "Excessive Force": "badge-excessive",
+  "Corruption": "badge-corruption",
+  "Assault": "badge-assault",
+  "Wrongful Arrest": "badge-wrongful"
+};
+const STATUS_MAP = {
+  "No Action": "status-no-action",
+  "Under Investigation": "status-investigated",
+  "Charged": "status-charged",
+  "Convicted": "status-convicted",
+  "Acquitted": "status-acquitted",
+  "Pending": "status-pending",
+  "Civil Damages Awarded": "status-civil-awarded"
+};
+
+let activeCategory = "";
+
+function init() {
+  buildFilters();
+  buildStats();
+  buildChart();
+  renderIncidents();
+
+  document.getElementById('searchBox').addEventListener('input', renderIncidents);
+  document.getElementById('yearFilter').addEventListener('change', renderIncidents);
+  document.getElementById('stateFilter').addEventListener('change', renderIncidents);
+  document.getElementById('statusFilter').addEventListener('change', renderIncidents);
+}
+
+function buildFilters() {
+  // Year filter
+  const years = [...new Set(INCIDENTS.map(i => i.date.substring(0,4)))].sort().reverse();
+  const yf = document.getElementById('yearFilter');
+  years.forEach(y => { const o = document.createElement('option'); o.value = y; o.textContent = y; yf.appendChild(o); });
+
+  // State filter
+  const states = [...new Set(INCIDENTS.map(i => i.state))].sort();
+  const sf = document.getElementById('stateFilter');
+  states.forEach(s => { const o = document.createElement('option'); o.value = s; o.textContent = s; sf.appendChild(o); });
+
+  // Category pills
+  const cp = document.getElementById('catPills');
+  const allPill = document.createElement('span');
+  allPill.className = 'pill active';
+  allPill.textContent = 'All';
+  allPill.onclick = () => { activeCategory = ''; document.querySelectorAll('.pill').forEach(p => p.classList.remove('active')); allPill.classList.add('active'); renderIncidents(); };
+  cp.appendChild(allPill);
+  CATEGORIES.forEach(c => {
+    const pill = document.createElement('span');
+    pill.className = 'pill';
+    pill.textContent = c;
+    pill.onclick = () => {
+      activeCategory = c;
+      document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      renderIncidents();
+    };
+    cp.appendChild(pill);
+  });
+}
+
+function buildStats() {
+  const bar = document.getElementById('statsBar');
+  const total = INCIDENTS.length;
+  const deaths = INCIDENTS.filter(i => i.category === 'Custodial Death').length;
+  const shootings = INCIDENTS.filter(i => i.category === 'Fatal Shooting').length;
+  const noAction = INCIDENTS.filter(i => i.status === 'No Action').length;
+
+  bar.innerHTML = `
+    <div class="stat-card red"><div class="num">${total}</div><div class="label">Documented Incidents</div></div>
+    <div class="stat-card orange"><div class="num">${deaths}</div><div class="label">Custodial Death Cases</div></div>
+    <div class="stat-card blue"><div class="num">${shootings}</div><div class="label">Fatal Shooting Cases</div></div>
+    <div class="stat-card green"><div class="num">${noAction}</div><div class="label">No Action Taken</div></div>
+  `;
+}
+
+function buildChart() {
+  const yearCounts = {};
+  INCIDENTS.forEach(i => {
+    const y = i.date.substring(0,4);
+    yearCounts[y] = (yearCounts[y] || 0) + 1;
+  });
+  const years = Object.keys(yearCounts).sort();
+  const maxVal = Math.max(...Object.values(yearCounts));
+  const chart = document.getElementById('yearChart');
+  chart.innerHTML = '';
+  years.forEach(y => {
+    const count = yearCounts[y];
+    const height = Math.max((count / maxVal) * 140, 4);
+    chart.innerHTML += `
+      <div class="chart-col">
+        <div class="chart-val">${count}</div>
+        <div class="chart-bar" style="height:${height}px"></div>
+        <div class="chart-label">${y}</div>
+      </div>
+    `;
+  });
+}
+
+function getFiltered() {
+  const q = document.getElementById('searchBox').value.toLowerCase();
+  const year = document.getElementById('yearFilter').value;
+  const state = document.getElementById('stateFilter').value;
+  const status = document.getElementById('statusFilter').value;
+
+  return INCIDENTS.filter(i => {
+    if (activeCategory && i.category !== activeCategory) return false;
+    if (year && !i.date.startsWith(year)) return false;
+    if (state && i.state !== state) return false;
+    if (status && i.status !== status) return false;
+    if (q) {
+      const haystack = (i.title + ' ' + i.description + ' ' + i.victim + ' ' + i.location + ' ' + i.state + ' ' + i.category).toLowerCase();
+      return haystack.includes(q);
+    }
+    return true;
+  }).sort((a, b) => b.date.localeCompare(a.date));
+}
+
+function renderIncidents() {
+  const list = document.getElementById('incidentList');
+  const filtered = getFiltered();
+  document.getElementById('resultCount').textContent = `Showing ${filtered.length} of ${INCIDENTS.length} documented incidents`;
+
+  if (filtered.length === 0) {
+    list.innerHTML = '<div class="no-results">No incidents match your filters. Try broadening your search.</div>';
+    return;
+  }
+
+  list.innerHTML = filtered.map(i => `
+    <div class="incident" onclick="openModal(${i.id})">
+      <div class="incident-header">
+        <span class="incident-date">${formatDate(i.date)}</span>
+        <span class="incident-title">${i.title}</span>
+        <div class="incident-badges">
+          <span class="badge ${BADGE_MAP[i.category] || 'badge-assault'}">${i.category}</span>
+        </div>
+      </div>
+      <div class="incident-meta">
+        <span>📍 ${i.location}, ${i.state}</span>
+        <span>👤 ${i.victim}</span>
+      </div>
+      <div class="incident-desc">${truncate(i.description, 220)}</div>
+      <div class="incident-status">
+        Outcome: <span class="status-tag ${STATUS_MAP[i.status] || 'status-pending'}">${i.status}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openModal(id) {
+  const i = INCIDENTS.find(x => x.id === id);
+  if (!i) return;
+  const m = document.getElementById('modalContent');
+  m.innerHTML = `
+    <h2>${i.title}</h2>
+    <div style="margin:0.75rem 0;">
+      <span class="badge ${BADGE_MAP[i.category] || 'badge-assault'}">${i.category}</span>
+      <span class="status-tag ${STATUS_MAP[i.status] || 'status-pending'}" style="margin-left:0.5rem;">${i.status}</span>
+    </div>
+    <div style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1rem;">
+      <strong>Date:</strong> ${formatDate(i.date)}<br>
+      <strong>Location:</strong> ${i.location}, ${i.state}<br>
+      <strong>Victim(s):</strong> ${i.victim}
+    </div>
+    <p style="line-height:1.7; margin-bottom:1rem;">${i.description}</p>
+    <div style="background:var(--surface2); border-radius:8px; padding:1rem; margin-bottom:1rem;">
+      <strong style="font-size:0.85rem;">Outcome / Accountability:</strong>
+      <p style="font-size:0.88rem; color:var(--text-muted); margin-top:0.4rem;">${i.statusDetail}</p>
+    </div>
+    <div style="font-size:0.85rem;">
+      <strong>Sources:</strong><br>
+      ${i.sources.map(s => `<a href="${s.url}" target="_blank" rel="noopener">${s.name}</a>`).join(' &nbsp;|&nbsp; ')}
+    </div>
+  `;
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+document.getElementById('modal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+function formatDate(d) {
+  if (d.endsWith('01-01') && d.length === 10) {
+    return d.substring(0,4);
+  }
+  const dt = new Date(d + 'T00:00:00');
+  return dt.toLocaleDateString('en-MY', { year: 'numeric', month: 'short', day: 'numeric' });
+}
+
+function truncate(str, len) {
+  return str.length > len ? str.substring(0, len) + '...' : str;
+}
+
+// Initialize
+init();
+// To use Google Sheets instead: uncomment loadFromGoogleSheets() and comment out init()
+// loadFromGoogleSheets();
+</script>
+</body>
+</html>
