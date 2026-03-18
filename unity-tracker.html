@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>National Unity Efforts in Malaysia — Public Tracker</title>
+<style>
+  :root {
+    --bg: #0c1018;
+    --surface: #141c28;
+    --surface2: #1b2536;
+    --border: #263044;
+    --text: #e0e6f0;
+    --text-muted: #8895aa;
+    --gold: #f0b840;
+    --teal: #38bfa0;
+    --blue: #4a9de8;
+    --purple: #9070d0;
+    --coral: #e87060;
+    --green: #4caf80;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background:var(--bg); color:var(--text); line-height:1.6; }
+  a { color:var(--blue); text-decoration:none; }
+  a:hover { text-decoration:underline; }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, #0e1520 0%, #121828 40%, #101825 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 3rem 1.5rem 2rem; text-align:center;
+    position:relative; overflow:hidden;
+  }
+  .hero::before {
+    content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%;
+    background: radial-gradient(ellipse at 30% 50%, rgba(56,191,160,0.04) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 30%, rgba(240,184,64,0.04) 0%, transparent 60%);
+  }
+  .hero h1 { font-size:2rem; font-weight:700; letter-spacing:-0.5px; position:relative; }
+  .hero h1 .highlight { background: linear-gradient(135deg, var(--gold), var(--teal)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .hero .subtitle { color:var(--text-muted); max-width:720px; margin:0.5rem auto 0; font-size:0.95rem; position:relative; }
+  .hero .tagline {
+    margin-top:1rem; display:inline-block; padding:0.4rem 1rem; border-radius:20px;
+    background:rgba(56,191,160,0.08); border:1px solid rgba(56,191,160,0.2);
+    font-size:0.82rem; color:var(--teal); position:relative;
+  }
+
+  /* Stats */
+  .stats-bar {
+    display:flex; flex-wrap:wrap; gap:1rem; justify-content:center;
+    padding:1.5rem; background:var(--surface); border-bottom:1px solid var(--border);
+  }
+  .stat-card {
+    background:var(--surface2); border:1px solid var(--border); border-radius:10px;
+    padding:1rem 1.5rem; min-width:155px; text-align:center;
+  }
+  .stat-card .num { font-size:1.8rem; font-weight:700; }
+  .stat-card .label { font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; }
+  .stat-card.gold .num { color:var(--gold); }
+  .stat-card.teal .num { color:var(--teal); }
+  .stat-card.blue .num { color:var(--blue); }
+  .stat-card.purple .num { color:var(--purple); }
+
+  /* Controls */
+  .controls {
+    padding:1.25rem 1.5rem; background:var(--surface); border-bottom:1px solid var(--border);
+    display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center; justify-content:center;
+  }
+  .controls input, .controls select {
+    background:var(--surface2); color:var(--text); border:1px solid var(--border);
+    padding:0.6rem 1rem; border-radius:8px; font-size:0.9rem; outline:none;
+  }
+  .controls input { min-width:280px; }
+  .controls input:focus, .controls select:focus { border-color:var(--teal); }
+
+  /* Category pills */
+  .cat-pills { display:flex; flex-wrap:wrap; gap:0.5rem; justify-content:center; padding:1rem 1.5rem; }
+  .pill {
+    padding:0.35rem 0.9rem; border-radius:20px; font-size:0.8rem; cursor:pointer;
+    border:1px solid var(--border); background:var(--surface2); color:var(--text-muted);
+    transition: all 0.15s;
+  }
+  .pill:hover, .pill.active { background:var(--teal); color:#fff; border-color:var(--teal); }
+
+  /* Container */
+  .container { max-width:1100px; margin:0 auto; padding:1.5rem; }
+  .result-count { font-size:0.85rem; color:var(--text-muted); margin-bottom:1rem; }
+
+  /* Cards */
+  .entry {
+    background:var(--surface); border:1px solid var(--border); border-radius:12px;
+    padding:1.5rem; margin-bottom:1rem; transition: border-color 0.2s; cursor:pointer;
+  }
+  .entry:hover { border-color:var(--teal); }
+  .entry-header { display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center; margin-bottom:0.75rem; }
+  .entry-date { font-size:0.8rem; color:var(--gold); font-weight:600; white-space:nowrap; }
+  .entry-title { font-size:1.1rem; font-weight:600; flex:1; min-width:200px; }
+  .entry-badges { display:flex; flex-wrap:wrap; gap:0.4rem; }
+  .badge {
+    padding:0.2rem 0.6rem; border-radius:12px; font-size:0.7rem; font-weight:600;
+    text-transform:uppercase; letter-spacing:0.3px;
+  }
+  .badge-programme { background:rgba(56,191,160,0.12); color:#50d0b0; }
+  .badge-policy { background:rgba(74,157,232,0.12); color:#70b8f0; }
+  .badge-event { background:rgba(240,184,64,0.12); color:#f0c060; }
+  .badge-legislation { background:rgba(144,112,208,0.12); color:#b090e0; }
+  .badge-budget { background:rgba(76,175,128,0.12); color:#60c090; }
+  .badge-milestone { background:rgba(232,112,96,0.12); color:#f09080; }
+
+  .entry-meta { display:flex; flex-wrap:wrap; gap:1rem; font-size:0.82rem; color:var(--text-muted); margin-bottom:0.75rem; }
+  .entry-desc { font-size:0.9rem; color:var(--text-muted); line-height:1.65; margin-bottom:0.75rem; }
+  .entry-agency { font-size:0.78rem; }
+  .agency-tag {
+    display:inline-block; padding:0.15rem 0.5rem; border-radius:8px; font-size:0.72rem;
+    font-weight:600; background:rgba(74,157,232,0.1); color:var(--blue);
+  }
+  .entry-sources { margin-top:0.5rem; font-size:0.78rem; }
+  .entry-sources a { margin-right:0.75rem; }
+
+  /* Chart */
+  .chart-section { padding:2rem 1.5rem; background:var(--surface); border-radius:12px; margin-bottom:2rem; border:1px solid var(--border); }
+  .chart-section h2 { font-size:1.1rem; margin-bottom:1rem; }
+  .chart-bar-container { display:flex; align-items:flex-end; gap:6px; height:180px; padding-top:1rem; }
+  .chart-col { display:flex; flex-direction:column; align-items:center; flex:1; }
+  .chart-bar {
+    width:100%; max-width:50px;
+    background: linear-gradient(180deg, var(--teal) 0%, rgba(56,191,160,0.3) 100%);
+    border-radius:4px 4px 0 0; transition: height 0.4s ease; min-height:2px;
+  }
+  .chart-label { font-size:0.7rem; color:var(--text-muted); margin-top:0.4rem; writing-mode:vertical-rl; }
+  .chart-val { font-size:0.7rem; color:var(--teal); margin-bottom:0.25rem; }
+
+  /* Category breakdown mini-chart */
+  .cat-chart { display:flex; gap:0.75rem; flex-wrap:wrap; margin-top:1.5rem; }
+  .cat-chip {
+    display:flex; align-items:center; gap:0.4rem; padding:0.4rem 0.75rem;
+    background:var(--surface2); border:1px solid var(--border); border-radius:8px; font-size:0.8rem;
+  }
+  .cat-dot { width:10px; height:10px; border-radius:50%; }
+
+  /* Modal */
+  .modal-overlay {
+    display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7);
+    z-index:1000; justify-content:center; align-items:center; padding:1rem;
+  }
+  .modal-overlay.open { display:flex; }
+  .modal {
+    background:var(--surface); border:1px solid var(--border); border-radius:16px;
+    max-width:720px; width:100%; max-height:85vh; overflow-y:auto; padding:2rem;
+  }
+  .modal h2 { font-size:1.3rem; margin-bottom:0.5rem; }
+  .modal .close-btn {
+    float:right; background:none; border:none; color:var(--text-muted);
+    font-size:1.5rem; cursor:pointer; line-height:1;
+  }
+  .modal .close-btn:hover { color:var(--text); }
+  .detail-block {
+    background:var(--surface2); border-radius:8px; padding:1rem; margin:1rem 0;
+  }
+
+  /* Footer */
+  footer {
+    text-align:center; padding:2rem 1.5rem; border-top:1px solid var(--border);
+    color:var(--text-muted); font-size:0.82rem;
+  }
+
+  .no-results { text-align:center; padding:3rem 1rem; color:var(--text-muted); }
+
+  @media (max-width:640px) {
+    .hero h1 { font-size:1.4rem; }
+    .controls input { min-width:100%; }
+    .stat-card { min-width:130px; padding:0.75rem 1rem; }
+    .stat-card .num { font-size:1.4rem; }
+    .entry { padding:1rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>Malaysia's <span class="highlight">National Unity</span> Efforts</h1>
+  <p class="subtitle">Tracking programmes, policies, events, and milestones by Kementerian Perpaduan Negara (KPN) and Jabatan Perpaduan Negara dan Integrasi Nasional (JPNIN) to promote harmony and integration across Malaysia.</p>
+  <span class="tagline">Sourced from verified news reports, government publications, and public records</span>
+</div>
+
+<div class="stats-bar" id="statsBar"></div>
+
+<div class="controls">
+  <input type="text" id="searchBox" placeholder="Search by keyword, programme, location..." />
+  <select id="yearFilter"><option value="">All Years</option></select>
+  <select id="agencyFilter">
+    <option value="">All Agencies</option>
+    <option value="KPN">Kementerian Perpaduan (KPN)</option>
+    <option value="JPNIN">JPNIN</option>
+    <option value="MOE">Ministry of Education</option>
+    <option value="Government">Government of Malaysia</option>
+  </select>
+  <select id="scopeFilter">
+    <option value="">All Scope</option>
+    <option value="National">National</option>
+    <option value="State">State-level</option>
+    <option value="Community">Community</option>
+  </select>
+</div>
+
+<div class="cat-pills" id="catPills"></div>
+
+<div class="container">
+  <div id="chartSection" class="chart-section">
+    <h2>Documented Efforts by Year</h2>
+    <div class="chart-bar-container" id="yearChart"></div>
+    <div class="cat-chart" id="catChart"></div>
+  </div>
+
+  <div class="result-count" id="resultCount"></div>
+  <div id="entryList"></div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <button class="close-btn" onclick="closeModal()">&times;</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<footer>
+  <p>Data sourced from <a href="https://www.perpaduan.gov.my" target="_blank">Kementerian Perpaduan</a>, <a href="https://www.jpnin.gov.my" target="_blank">JPNIN</a>, <a href="https://www.bernama.com" target="_blank">BERNAMA</a>, <a href="https://www.freemalaysiatoday.com" target="_blank">FMT</a>, <a href="https://www.malaymail.com" target="_blank">Malay Mail</a>, <a href="https://www.thestar.com.my" target="_blank">The Star</a>, and other public sources.</p>
+  <p style="margin-top:0.5rem;">Want to add an entry? Use the <a href="#" onclick="alert('Import the CSV template into Google Sheets. Add new rows for each programme, policy, or event. Publish the sheet as CSV and connect it to this tracker.')">Google Sheets template</a> to contribute data.</p>
+</footer>
+
+<script>
+const ENTRIES = [
+  {
+    id: 1,
+    date: "1970-08-31",
+    title: "Rukun Negara Proclaimed as National Principles",
+    category: "Policy",
+    agency: "Government",
+    scope: "National",
+    location: "Nationwide",
+    description: "The Rukun Negara was proclaimed by the fourth Yang di-Pertuan Agong, Tuanku Ismail Nasiruddin Shah, on 31 August 1970, in the aftermath of the 13 May 1969 racial riots. It established five national principles: Belief in God, Loyalty to King and Country, Supremacy of the Constitution, Rule of Law, and Courtesy and Morality. It remains the ideological foundation for all national unity policies.",
+    impact: "Became the bedrock of national unity ideology, recited daily in schools and at official events. All subsequent unity policies reference it as the foundational document.",
+    sources: [
+      { name: "Wikipedia — Rukun Negara", url: "https://en.wikipedia.org/wiki/Rukun_Negara" },
+      { name: "BERNAMA", url: "https://www.bernama.com/en/news.php?id=2287273" }
+    ]
+  },
+  {
+    id: 2,
+    date: "1975-01-01",
+    title: "Rukun Tetangga (Neighbourhood Watch) Scheme Launched",
+    category: "Programme",
+    agency: "JPNIN",
+    scope: "Community",
+    location: "Nationwide",
+    description: "The Rukun Tetangga scheme was launched in 1975 initially to ensure neighbourhood safety. It evolved into a community-building platform implementing programmes based on five pillars: unity, economy, security, education, and quality of life. Under the 2010 Transformation Model, activities are designed to build a multi-ethnic society living in harmony.",
+    impact: "As of 2024, there are over 7,200 KRT (Kawasan Rukun Tetangga) units across Malaysia, with 152 upgraded to Progressive KRT status with enhanced financial and technical support.",
+    sources: [
+      { name: "JPNIN — Rukun Tetangga", url: "https://www.jpnin.gov.my/ms/komuniti/rukun-tetangga/pengenalan" },
+      { name: "Kementerian Perpaduan — RT Governance Plan", url: "https://www.perpaduan.gov.my/index.php/en/policy-of-unity/dasarr-2/policy-of-unity/rukun-tetangga-governance-plan" }
+    ]
+  },
+  {
+    id: 3,
+    date: "1986-01-01",
+    title: "RIMUP — Pupils Integration for Unity Programme Begins",
+    category: "Programme",
+    agency: "MOE",
+    scope: "National",
+    location: "Schools nationwide",
+    description: "Rancangan Integrasi Murid Untuk Perpaduan (RIMUP) was initiated by the Ministry of Education in 1986 and updated in 2012. The programme brings together students from national schools (SK), Chinese vernacular schools (SJKC), and Tamil vernacular schools (SJKT) for joint activities across five categories: academic excellence, sports and games, festivals and assemblies, camps and visits, and social service.",
+    impact: "Research from Universiti Malaysia Sabah found RIMUP effective in nurturing social cohesion among students of different backgrounds, though implementation consistency varies by district.",
+    sources: [
+      { name: "UMS Research Paper", url: "https://jurcon.ums.edu.my/ojums/index.php/MANU/article/view/1581" },
+      { name: "MOE Portal", url: "https://sites.google.com/epembelajaran.edu.my/izzatulnajihahazham/sosiologi-dalam-pendidikan/program-rancangan-integrasi-murid-untuk-perpaduan-rimup" }
+    ]
+  },
+  {
+    id: 4,
+    date: "2012-01-01",
+    title: "Rukun Tetangga Act 2012 (Act 751) Enacted",
+    category: "Legislation",
+    agency: "Government",
+    scope: "National",
+    location: "Nationwide",
+    description: "The Rukun Tetangga Act 2012 (Act 751) was enacted to provide a legal framework governing the establishment, management, and functions of Rukun Tetangga areas (KRT). It formalised the role of KRT committees in promoting unity, neighbourhood safety, and community development programmes.",
+    impact: "Gave legal standing to over 7,200 KRT committees, enabling them to receive government funding, conduct community mediation, and operate unity preschools.",
+    sources: [
+      { name: "Kementerian Perpaduan", url: "https://www.perpaduan.gov.my/index.php/en/policy-of-unity/policy-of-unity/rukun-tetangga-act-2012-act-751" }
+    ]
+  },
+  {
+    id: 5,
+    date: "2021-02-15",
+    title: "National Unity Policy (Dasar Perpaduan Negara) Launched",
+    category: "Policy",
+    agency: "KPN",
+    scope: "National",
+    location: "Nationwide",
+    description: "The National Unity Policy (DPN) outlines an inclusive formula to preserve national unity for the country's stability and prosperity. Themed 'Unity in Diversity', it is built on the Federal Constitution and Rukun Negara. The DPN sets three core objectives: strengthen unity and national integration, form a national identity with character and patriotism, and produce Malaysians who appreciate and foster unity.",
+    impact: "Established the strategic framework guiding all subsequent KPN and JPNIN programmes. Provides 3 cores of unity supported by 12 strategies.",
+    sources: [
+      { name: "Kementerian Perpaduan — DPN", url: "https://www.perpaduan.gov.my/index.php/en/policy-of-unity/policy/national-unity-policy" },
+      { name: "The Malaysian Reserve", url: "https://themalaysianreserve.com/2021/02/16/a-10-year-policy-to-strengthen-malaysian-unity/" }
+    ]
+  },
+  {
+    id: 6,
+    date: "2021-02-15",
+    title: "National Unity Blueprint 2021–2030 Published",
+    category: "Policy",
+    agency: "KPN",
+    scope: "National",
+    location: "Nationwide",
+    description: "The National Unity Blueprint 2021–2030 accompanies the National Unity Policy as a ten-year roadmap. It was developed with input from multiple stakeholders and outlines specific actions, KPIs, and timelines for fostering unity across education, economy, governance, and community spheres.",
+    impact: "Provides measurable targets across a decade. Recognised by civil society groups like GOPIO Malaysia and think tanks like IDEAS and Penang Institute as a significant step, though they called for stronger implementation mechanisms.",
+    sources: [
+      { name: "Kementerian Perpaduan — Blueprint", url: "https://www.perpaduan.gov.my/index.php/en/policy-of-unity/dasarr-2/policy-of-unity/national-unity-blueprint-2021-2030" },
+      { name: "Penang Institute Analysis", url: "https://penanginstitute.org/publications/issues/national-unity-2-0-a-necessary-upgrade-and-revival-in-malaysias-nation-building-ambitions-and-approach/" },
+      { name: "IDEAS", url: "https://www.ideas.org.my/the-national-unity-blueprint-2021-2030-is-an-opportunity-to-evaluate-race-relations-more-critically/" }
+    ]
+  },
+  {
+    id: 7,
+    date: "2021-02-15",
+    title: "National Unity Action Plan 2021–2030 Released",
+    category: "Policy",
+    agency: "KPN",
+    scope: "National",
+    location: "Nationwide",
+    description: "The National Unity Action Plan 2021–2030 translates the Blueprint into concrete action items with assigned responsible agencies, timelines, and output indicators. It covers inter-ethnic relations, religious harmony, community development, and institutional reform.",
+    impact: "Created an implementation framework with accountability mechanisms across government ministries and departments.",
+    sources: [
+      { name: "Kementerian Perpaduan — Action Plan", url: "https://www.perpaduan.gov.my/index.php/en/policy-of-unity/dasarr-2/policy-of-unity/national-unity-action-plan-2021-2030" }
+    ]
+  },
+  {
+    id: 8,
+    date: "2023-05-19",
+    title: "Kembara Perpaduan Malaysia MADANI Launched Nationwide",
+    category: "Programme",
+    agency: "KPN",
+    scope: "National",
+    location: "Multiple states",
+    description: "The government launched the Kembara Perpaduan Malaysia MADANI initiative as a flagship programme under Budget 2023 (Measure 11). It consists of three main clusters: Semarak Kenegaraan (National Spirit), Semarak Perpaduan (Unity Spirit), and Program Komuniti RAHMAH (Compassionate Community Programme). The programme brings together communities through cultural showcases, value education, and cross-cultural dialogue.",
+    impact: "Allocated RM40 million in Budget 2024. In 2024, Jelajah Kembara Perpaduan visited six states (Sabah, Sarawak, Labuan, Terengganu, Penang, Negeri Sembilan). The Unity Run in Johor attracted a record 7,000 participants.",
+    sources: [
+      { name: "Free Malaysia Today", url: "https://www.freemalaysiatoday.com/category/leisure/2023/05/19/govt-launches-nationwide-programme-to-foster-unity" },
+      { name: "Borneo Post", url: "https://www.theborneopost.com/2024/02/19/fatimah-kembara-perpaduan-programme-set-for-april-this-year/" }
+    ]
+  },
+  {
+    id: 9,
+    date: "2023-08-06",
+    title: "Jiran Muda Programme Reactivated for Youth Engagement",
+    category: "Programme",
+    agency: "JPNIN",
+    scope: "Community",
+    location: "Nationwide",
+    description: "The Ministry reactivated the Jiran Muda programme to attract younger generations into Kawasan Rukun Tetangga (KRT) activities. JPNIN collaborated with the National Sports Council (MSN) to inject new energy. As of 2023, there were 5,892 Jiran Muda group members and 188 sub-units nationwide. The programme sits alongside Tunas Jiran (children) and Jiran Wanita (women) in the KRT ecosystem.",
+    impact: "Youth participation in KRT activities increased. The Minister called young Malaysians 'agents of change and national unity heroes'.",
+    sources: [
+      { name: "Sinar Harian", url: "https://www.sinarharian.com.my/article/217629/berita/semasa/jiran-muda-aktif-semula-tarik-generasi-baharu-sertai-krt" },
+      { name: "Borneo Post", url: "https://www.theborneopost.com/2023/08/06/young-malaysians-can-be-agents-of-change-national-unity-heroes-says-minister/" }
+    ]
+  },
+  {
+    id: 10,
+    date: "2023-01-01",
+    title: "JPNIN National Student Integration Programme",
+    category: "Programme",
+    agency: "JPNIN",
+    scope: "National",
+    location: "Kanowit, Sarawak",
+    description: "JPNIN collaborated with Universiti Putra Malaysia (UPM) to run a National Integration and Unity Programme bringing together students from diverse ethnic backgrounds. The programme was described as the best platform to fuel the spirit of unity with youth involvement.",
+    impact: "Strengthened university-government collaboration on unity programmes and engaged youth in cross-cultural dialogue.",
+    sources: [
+      { name: "UPM", url: "https://upm.edu.my/news/jpnin_upm_collaborates_for_a_national_integration_and_unity_programme-33071?L=en" }
+    ]
+  },
+  {
+    id: 11,
+    date: "2024-05-25",
+    title: "Minggu Perpaduan 2024 — National Unity Week in Johor",
+    category: "Event",
+    agency: "KPN",
+    scope: "National",
+    location: "Johor Bahru, Johor",
+    description: "The National Unity Week 2024, officially launched by Prime Minister Dato' Seri Anwar Ibrahim on 25 May 2024 in Johor Bahru, was a vibrant showcase of Malaysia's cultural diversity. Activities included ethnic house displays, traditional dances, heritage exhibitions, the Larian Kembara Perpaduan (Unity Run) with 7,000 participants, and community forums.",
+    impact: "Described as the best platform to highlight diverse culture of Malaysians. The Sun reported it drew wide public participation and media coverage.",
+    sources: [
+      { name: "The Sun", url: "https://thesun.my/malaysia-news/2024-unity-week-celebration-best-platform-to-highlight-diverse-culture-of-malaysians-BP12483174" },
+      { name: "BERNAMA", url: "https://www.bernama.com/en/news.php?id=2300252" },
+      { name: "Kementerian Perpaduan", url: "https://www.perpaduan.gov.my/index.php/en/kalendar-aktiviti-program/general/perasmian-sambutan-minggu-perpaduan-tahun-2024-peringkat-kebangsaan" }
+    ]
+  },
+  {
+    id: 12,
+    date: "2024-01-01",
+    title: "152 Progressive Rukun Tetangga (KRT) Areas Established",
+    category: "Milestone",
+    agency: "KPN",
+    scope: "Community",
+    location: "Nationwide",
+    description: "The Ministry surpassed its initial target, increasing Progressive Rukun Tetangga (KRT) units from 116 to 152 in 2024. Progressive KRTs receive enhanced financial aid, expert guidance, and hands-on training. They serve as model community units demonstrating how neighbourhood-level organisation can strengthen unity, economy, security, education, and quality of life.",
+    impact: "JPNIN aims to transform 500 KRTs to Progressive KRT status. The 152 units serve as blueprints for scaling community-driven unity nationwide.",
+    sources: [
+      { name: "The Star", url: "https://www.thestar.com.my/news/nation/2024/11/28/leading-the-charge-for-a-harmonious-malaysia" },
+      { name: "BERNAMA", url: "https://www.bernama.com/en/news.php?id=2332670" }
+    ]
+  },
+  {
+    id: 13,
+    date: "2024-11-27",
+    title: "Over 300 High-Impact Programmes Organised in 2024",
+    category: "Milestone",
+    agency: "KPN",
+    scope: "National",
+    location: "Nationwide",
+    description: "National Unity Minister Datuk Aaron Ago Dagang reported that over 300 high-impact programmes were organised throughout 2024 under three themes: Komuniti Rahmah (Compassionate Community), Semarak Perpaduan (Unity Spirit), and Semarak Kenegaraan (National Spirit). Unity was described as a central theme of all KPN initiatives throughout the year.",
+    impact: "Demonstrated the scale of the ministry's outreach, touching communities across all states through diverse programme types.",
+    sources: [
+      { name: "Borneo Post", url: "https://www.theborneopost.com/2024/11/27/unity-a-central-theme-of-kpn-initiatives-throughout-2024/" },
+      { name: "The Star", url: "https://www.thestar.com.my/news/nation/2024/11/28/leading-the-charge-for-a-harmonious-malaysia" }
+    ]
+  },
+  {
+    id: 14,
+    date: "2024-08-06",
+    title: "RM290 Million Budget 2025 Proposal for Five Unity Initiatives",
+    category: "Budget",
+    agency: "KPN",
+    scope: "National",
+    location: "Nationwide",
+    description: "The Ministry proposed RM290 million in Budget 2025 (up from RM60 million in 2024) to fund five initiatives: (1) Flagship unity programmes (Kembara Perpaduan); (2) Community wellbeing — strengthening KRT, volunteer patrols, community mediators, and unity preschools; (3) Technology and digitalisation of national heritage; (4) Acquisition and preservation of archival, museum and library materials; (5) Development of the Malaysia Harmony Charter (Piagam Harmoni Malaysia).",
+    impact: "Signalled a nearly five-fold increase in proposed funding for national unity, reflecting the government's prioritisation of the unity agenda. The Piagam Harmoni Malaysia was announced as a new guideline for inter-religious and inter-ethnic harmony.",
+    sources: [
+      { name: "Malay Mail", url: "https://www.malaymail.com/news/malaysia/2024/08/06/national-unity-ministry-hopes-for-rm290m-allocation-in-budget-2025-to-run-five-initiatives/146164" },
+      { name: "The Sun", url: "https://thesun.my/malaysia-news/budget-2025-national-unity-ministry-needs-rm290-million-for-five-initiatives-DJ12822023" }
+    ]
+  },
+  {
+    id: 15,
+    date: "2025-01-01",
+    title: "Tamil Language Innovation Competition 2025",
+    category: "Event",
+    agency: "KPN",
+    scope: "National",
+    location: "UPSI, Perak",
+    description: "The Deputy Minister of National Unity launched the Tamil Language Innovation Competition 2025, organised by the Tamil Language Association at Sultan Idris Education University (UPSI). The competition promotes linguistic diversity and cultural preservation as core elements of national unity.",
+    impact: "Demonstrates the Ministry's commitment to celebrating and preserving the languages and cultures of all Malaysian communities, not just the majority.",
+    sources: [
+      { name: "Kementerian Perpaduan", url: "https://www.perpaduan.gov.my/index.php/en/mediaa/media-collection/photo/2024/268-koleksi-media/galeri-foto/foto-jan-2025/1380-pertandingan-inovasi-bahasa-tamil-2025" }
+    ]
+  },
+  {
+    id: 16,
+    date: "2025-01-01",
+    title: "Piagam Harmoni Malaysia (Malaysia Harmony Charter) Development",
+    category: "Policy",
+    agency: "KPN",
+    scope: "National",
+    location: "Nationwide",
+    description: "The Malaysia Harmony Charter (Piagam Harmoni Malaysia) is being developed as the main guideline for relationships and harmony between religions and races. Proposed under the Budget 2025 framework, it represents a new policy instrument to complement the National Unity Policy and provide practical guidelines for inter-faith and inter-ethnic engagement.",
+    impact: "Expected to become the reference document for managing religious and ethnic relations, potentially as significant as the Rukun Negara in practical community application.",
+    sources: [
+      { name: "Malay Mail", url: "https://www.malaymail.com/news/malaysia/2024/08/06/national-unity-ministry-hopes-for-rm290m-allocation-in-budget-2025-to-run-five-initiatives/146164" }
+    ]
+  },
+  {
+    id: 17,
+    date: "2024-01-01",
+    title: "JPNIN Three Mechanisms for Managing Unity Issues",
+    category: "Programme",
+    agency: "JPNIN",
+    scope: "National",
+    location: "Nationwide",
+    description: "JPNIN established three mechanisms for managing issues related to national unity: community mediation services, early warning systems for ethnic tensions, and rapid-response coordination with state-level JPNIN offices. These mechanisms aim to address unity challenges proactively rather than reactively.",
+    impact: "Provides a structured approach to conflict prevention and resolution at the community level, moving JPNIN from a purely programmatic role to an active peacebuilding function.",
+    sources: [
+      { name: "Sinar Harian", url: "https://www.sinarharian.com.my/article/663635/berita/nasional/jpnin-sedia-tiga-mekanisme-pengurusan-berkait-isu-perpaduan" }
+    ]
+  }
+];
+
+// ============================================================
+// GOOGLE SHEETS (uncomment to enable — same approach as police tracker)
+// ============================================================
+// const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/YOUR_SHEET_ID/pub?output=csv";
+// async function loadFromGoogleSheets() { /* same as police tracker */ }
+
+// ============================================================
+// APP
+// ============================================================
+const CATEGORIES = [...new Set(ENTRIES.map(e => e.category))].sort();
+const BADGE_MAP = {
+  "Programme": "badge-programme", "Policy": "badge-policy", "Event": "badge-event",
+  "Legislation": "badge-legislation", "Budget": "badge-budget", "Milestone": "badge-milestone"
+};
+const CAT_COLORS = {
+  "Programme": "#38bfa0", "Policy": "#4a9de8", "Event": "#f0b840",
+  "Legislation": "#9070d0", "Budget": "#4caf80", "Milestone": "#e87060"
+};
+let activeCategory = "";
+
+function init() {
+  buildFilters(); buildStats(); buildChart(); renderEntries();
+  document.getElementById('searchBox').addEventListener('input', renderEntries);
+  document.getElementById('yearFilter').addEventListener('change', renderEntries);
+  document.getElementById('agencyFilter').addEventListener('change', renderEntries);
+  document.getElementById('scopeFilter').addEventListener('change', renderEntries);
+}
+
+function buildFilters() {
+  const years = [...new Set(ENTRIES.map(e => e.date.substring(0,4)))].sort().reverse();
+  const yf = document.getElementById('yearFilter');
+  years.forEach(y => { const o = document.createElement('option'); o.value=y; o.textContent=y; yf.appendChild(o); });
+
+  const cp = document.getElementById('catPills');
+  const allP = document.createElement('span'); allP.className='pill active'; allP.textContent='All';
+  allP.onclick = () => { activeCategory=''; document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active')); allP.classList.add('active'); renderEntries(); };
+  cp.appendChild(allP);
+  CATEGORIES.forEach(c => {
+    const p = document.createElement('span'); p.className='pill'; p.textContent=c;
+    p.onclick = () => { activeCategory=c; document.querySelectorAll('.pill').forEach(x=>x.classList.remove('active')); p.classList.add('active'); renderEntries(); };
+    cp.appendChild(p);
+  });
+}
+
+function buildStats() {
+  const bar = document.getElementById('statsBar');
+  const total = ENTRIES.length;
+  const progs = ENTRIES.filter(e=>e.category==='Programme').length;
+  const pols = ENTRIES.filter(e=>e.category==='Policy').length;
+  const events = ENTRIES.filter(e=>e.category==='Event'||e.category==='Milestone').length;
+  bar.innerHTML = `
+    <div class="stat-card gold"><div class="num">${total}</div><div class="label">Total Entries</div></div>
+    <div class="stat-card teal"><div class="num">${progs}</div><div class="label">Programmes</div></div>
+    <div class="stat-card blue"><div class="num">${pols}</div><div class="label">Policies & Legislation</div></div>
+    <div class="stat-card purple"><div class="num">${events}</div><div class="label">Events & Milestones</div></div>
+  `;
+}
+
+function buildChart() {
+  const yc = {}; ENTRIES.forEach(e => { const y=e.date.substring(0,4); yc[y]=(yc[y]||0)+1; });
+  const years = Object.keys(yc).sort();
+  const max = Math.max(...Object.values(yc));
+  const chart = document.getElementById('yearChart');
+  chart.innerHTML = years.map(y => `
+    <div class="chart-col">
+      <div class="chart-val">${yc[y]}</div>
+      <div class="chart-bar" style="height:${Math.max((yc[y]/max)*140,4)}px"></div>
+      <div class="chart-label">${y}</div>
+    </div>`).join('');
+
+  const cc = {}; ENTRIES.forEach(e => { cc[e.category]=(cc[e.category]||0)+1; });
+  document.getElementById('catChart').innerHTML = Object.entries(cc).map(([c,n]) =>
+    `<div class="cat-chip"><span class="cat-dot" style="background:${CAT_COLORS[c]||'#888'}"></span>${c}: ${n}</div>`
+  ).join('');
+}
+
+function getFiltered() {
+  const q = document.getElementById('searchBox').value.toLowerCase();
+  const year = document.getElementById('yearFilter').value;
+  const agency = document.getElementById('agencyFilter').value;
+  const scope = document.getElementById('scopeFilter').value;
+  return ENTRIES.filter(e => {
+    if (activeCategory && e.category !== activeCategory) return false;
+    if (year && !e.date.startsWith(year)) return false;
+    if (agency && e.agency !== agency) return false;
+    if (scope && e.scope !== scope) return false;
+    if (q) {
+      const h = (e.title+' '+e.description+' '+e.location+' '+e.agency+' '+e.category+' '+(e.impact||'')).toLowerCase();
+      return h.includes(q);
+    }
+    return true;
+  }).sort((a,b) => b.date.localeCompare(a.date));
+}
+
+function renderEntries() {
+  const list = document.getElementById('entryList');
+  const filtered = getFiltered();
+  document.getElementById('resultCount').textContent = `Showing ${filtered.length} of ${ENTRIES.length} documented efforts`;
+  if (!filtered.length) { list.innerHTML='<div class="no-results">No entries match your filters.</div>'; return; }
+  list.innerHTML = filtered.map(e => `
+    <div class="entry" onclick="openModal(${e.id})">
+      <div class="entry-header">
+        <span class="entry-date">${fmtDate(e.date)}</span>
+        <span class="entry-title">${e.title}</span>
+        <div class="entry-badges"><span class="badge ${BADGE_MAP[e.category]||''}">${e.category}</span></div>
+      </div>
+      <div class="entry-meta">
+        <span>📍 ${e.location}</span>
+        <span>🏛 ${e.agency}</span>
+        <span>🔭 ${e.scope}</span>
+      </div>
+      <div class="entry-desc">${trunc(e.description,220)}</div>
+      <div class="entry-agency">Agency: <span class="agency-tag">${e.agency}</span></div>
+    </div>
+  `).join('');
+}
+
+function openModal(id) {
+  const e = ENTRIES.find(x=>x.id===id); if(!e) return;
+  document.getElementById('modalContent').innerHTML = `
+    <h2>${e.title}</h2>
+    <div style="margin:0.75rem 0">
+      <span class="badge ${BADGE_MAP[e.category]||''}">${e.category}</span>
+      <span class="agency-tag" style="margin-left:0.5rem">${e.agency}</span>
+    </div>
+    <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1rem">
+      <strong>Date:</strong> ${fmtDate(e.date)}<br>
+      <strong>Location:</strong> ${e.location}<br>
+      <strong>Scope:</strong> ${e.scope}
+    </div>
+    <p style="line-height:1.7;margin-bottom:1rem">${e.description}</p>
+    ${e.impact ? `<div class="detail-block"><strong style="font-size:0.85rem">Impact & Outcomes:</strong><p style="font-size:0.88rem;color:var(--text-muted);margin-top:0.4rem">${e.impact}</p></div>` : ''}
+    <div style="font-size:0.85rem;margin-top:1rem">
+      <strong>Sources:</strong><br>
+      ${e.sources.map(s=>`<a href="${s.url}" target="_blank" rel="noopener">${s.name}</a>`).join(' &nbsp;|&nbsp; ')}
+    </div>`;
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+document.getElementById('modal').addEventListener('click', function(ev) { if(ev.target===this) closeModal(); });
+document.addEventListener('keydown', ev => { if(ev.key==='Escape') closeModal(); });
+
+function fmtDate(d) {
+  if(d.endsWith('01-01') && d.length===10) return d.substring(0,4);
+  return new Date(d+'T00:00:00').toLocaleDateString('en-MY',{year:'numeric',month:'short',day:'numeric'});
+}
+function trunc(s,n) { return s.length>n ? s.substring(0,n)+'...' : s; }
+
+init();
+</script>
+</body>
+</html>
