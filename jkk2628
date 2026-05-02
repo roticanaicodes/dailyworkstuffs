@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Carta Organisasi – IKRAM Serdang 2026-2028</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+    :root {
+      --green-dark:   #0d2f6e;
+      --green-mid:    #1a56db;
+      --green-bright: #60a5fa;
+      --green-light:  #bfdbfe;
+      --green-pale:   #eff6ff;
+      --gold:         #7dd3fc;
+      --gold-light:   #e0f2fe;
+      --white:        #ffffff;
+      --gray-100:     #f1f5f9;
+      --gray-300:     #cbd5e1;
+      --gray-600:     #64748b;
+      --gray-900:     #0f172a;
+      --shadow-sm:    0 2px 8px rgba(13,47,110,.10);
+      --shadow-md:    0 6px 24px rgba(13,47,110,.14);
+      --shadow-lg:    0 12px 40px rgba(13,47,110,.18);
+      --radius:       18px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: linear-gradient(135deg, #dbeafe 0%, #f0f9ff 50%, #e0f2fe 100%);
+      min-height: 100vh;
+      color: var(--gray-900);
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-mid) 100%);
+      padding: 36px 24px 28px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(circle at 80% 20%, rgba(255,255,255,.10) 0%, transparent 60%),
+                  radial-gradient(circle at 20% 80%, rgba(96,165,250,.15) 0%, transparent 50%);
+    }
+    .header-inner { position: relative; z-index: 1; }
+
+    .logo-placeholder {
+      width: 90px; height: 90px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.15);
+      border: 3px dashed rgba(255,255,255,.5);
+      margin: 0 auto 16px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: background .2s;
+      overflow: hidden;
+      position: relative;
+    }
+    .logo-placeholder:hover { background: rgba(255,255,255,.25); }
+    .logo-placeholder span {
+      font-size: 10px; color: rgba(255,255,255,.8);
+      text-align: center; line-height: 1.3; padding: 4px;
+    }
+    .logo-placeholder img { width: 100%; height: 100%; object-fit: contain; }
+    .logo-upload-input { display: none; }
+
+    header h1 {
+      font-size: clamp(15px, 2.4vw, 22px);
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1.35;
+      letter-spacing: -.3px;
+    }
+    header h2 {
+      font-size: clamp(12px, 1.6vw, 15px);
+      font-weight: 500;
+      color: var(--green-light);
+      margin-top: 6px;
+      letter-spacing: .5px;
+    }
+    .sesi-badge {
+      display: inline-block;
+      margin-top: 12px;
+      background: var(--gold);
+      color: var(--green-dark);
+      font-weight: 700;
+      font-size: 12px;
+      padding: 4px 14px;
+      border-radius: 999px;
+      letter-spacing: .4px;
+      margin-top: 14px;
+    }
+
+    /* ── MAIN LAYOUT ── */
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px 60px;
+    }
+
+    /* ── SECTION LABEL ── */
+    .section-label {
+      text-align: center;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--green-mid);
+      margin-bottom: 16px;
+    }
+
+    /* ── CONNECTOR LINES ── */
+    .connector-v {
+      width: 3px;
+      background: linear-gradient(to bottom, var(--green-bright), var(--green-light));
+      margin: 0 auto;
+      border-radius: 2px;
+    }
+    .connector-h-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      position: relative;
+    }
+    .connector-h-row::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      height: 3px;
+      background: linear-gradient(to right, transparent, var(--green-bright), transparent);
+      border-radius: 2px;
+    }
+
+    /* ── TIER WRAPPERS ── */
+    .tier {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .tier-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+      width: 100%;
+    }
+    .tier-row.two-col { max-width: 680px; }
+    .tier-row.multi  { max-width: 1100px; }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      padding: 18px 16px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: transform .22s ease, box-shadow .22s ease;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      width: 180px;
+      flex-shrink: 0;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-md);
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      border-radius: var(--radius) var(--radius) 0 0;
+    }
+
+    /* Tier colors */
+    .card.tier-1::before  { background: linear-gradient(90deg, var(--green-dark), var(--green-mid)); }
+    .card.tier-2::before  { background: linear-gradient(90deg, var(--green-mid), var(--green-bright)); }
+    .card.tier-3::before  { background: linear-gradient(90deg, var(--green-bright), #93c5fd); }
+    .card.tier-dept::before { background: linear-gradient(90deg, #38bdf8, #7dd3fc); }
+
+    .card.tier-1 { width: 210px; }
+    .card.tier-2 { width: 196px; }
+
+    /* ── PHOTO ── */
+    .photo-wrap {
+      width: 68px; height: 68px;
+      border-radius: 50%;
+      border: 3px solid var(--green-light);
+      background: var(--gray-100);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      overflow: hidden;
+      margin-bottom: 10px;
+      transition: border-color .2s;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .card:hover .photo-wrap { border-color: var(--green-bright); }
+    .photo-wrap .icon { font-size: 28px; }
+    .photo-wrap .photo-hint {
+      font-size: 8.5px; color: var(--gray-600); text-align: center;
+      line-height: 1.3; padding: 2px 4px;
+    }
+    .photo-wrap img { width: 100%; height: 100%; object-fit: cover; }
+    .photo-upload { display: none; }
+
+    /* bigger photo for tier 1 */
+    .card.tier-1 .photo-wrap { width: 80px; height: 80px; }
+
+    /* ── CARD TEXT ── */
+    .card-role {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--green-mid);
+      margin-bottom: 4px;
+    }
+    .card-name {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--gray-900);
+      line-height: 1.4;
+    }
+    .card.tier-1 .card-name { font-size: 13px; }
+
+    /* dept badge */
+    .dept-badge {
+      display: inline-block;
+      margin-top: 7px;
+      background: var(--gold-light);
+      color: var(--green-dark);
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 9px;
+      border-radius: 999px;
+      letter-spacing: .3px;
+    }
+
+    /* ── CONTACT INFO ── */
+    .card-contacts {
+      margin-top: 9px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      border-top: 1px dashed var(--gray-300);
+      padding-top: 8px;
+    }
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 8.5px;
+      color: var(--gray-600);
+      background: var(--gray-100);
+      border-radius: 6px;
+      padding: 3px 7px;
+      min-height: 20px;
+      text-align: left;
+      cursor: text;
+      transition: background .15s;
+    }
+    .contact-item:hover { background: var(--green-light); }
+    .contact-item .ci-icon { font-size: 10px; flex-shrink: 0; }
+    .contact-item .ci-text {
+      flex: 1;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      font-style: italic;
+      color: var(--gray-600);
+    }
+    .contact-item .ci-text.filled {
+      font-style: normal;
+      color: var(--gray-900);
+      font-weight: 600;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      width: 80%;
+      max-width: 600px;
+      height: 2px;
+      background: linear-gradient(to right, transparent, var(--green-light), transparent);
+      margin: 32px auto;
+      border-radius: 2px;
+    }
+
+    /* ── LEGEND ── */
+    .legend {
+      display: flex; flex-wrap: wrap; gap: 12px;
+      justify-content: center;
+      margin-top: 40px;
+    }
+    .legend-item {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 11px; font-weight: 600; color: var(--gray-600);
+    }
+    .legend-dot {
+      width: 14px; height: 14px; border-radius: 50%;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      font-size: 11px;
+      color: var(--gray-600);
+      padding: 24px;
+      border-top: 1px solid var(--gray-300);
+      margin-top: 40px;
+    }
+
+    /* ── MODAL ── */
+    .modal-backdrop {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.45);
+      z-index: 100;
+      align-items: center; justify-content: center;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      background: var(--white);
+      border-radius: 24px;
+      padding: 32px 28px;
+      width: 90%; max-width: 360px;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      text-align: center;
+    }
+    .modal-photo {
+      width: 100px; height: 100px;
+      border-radius: 50%;
+      border: 4px solid var(--green-light);
+      background: var(--gray-100);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 44px;
+      margin: 0 auto 16px;
+      overflow: hidden;
+    }
+    .modal-photo img { width: 100%; height: 100%; object-fit: cover; }
+    .modal-role {
+      font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
+      text-transform: uppercase; color: var(--green-mid); margin-bottom: 6px;
+    }
+    .modal-name { font-size: 18px; font-weight: 800; color: var(--gray-900); line-height: 1.3; }
+    .modal-dept {
+      margin-top: 10px;
+      display: inline-block;
+      background: var(--gold-light);
+      color: var(--green-dark);
+      font-size: 11px; font-weight: 700;
+      padding: 4px 14px; border-radius: 999px;
+    }
+    .modal-close {
+      position: absolute; top: 14px; right: 16px;
+      background: var(--gray-100); border: none; border-radius: 50%;
+      width: 32px; height: 32px; font-size: 16px;
+      cursor: pointer; color: var(--gray-600);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .modal-close:hover { background: var(--green-light); }
+    .modal-upload-btn {
+      margin-top: 18px;
+      background: var(--green-dark); color: var(--white);
+      border: none; border-radius: 999px;
+      padding: 9px 22px; font-size: 12px; font-weight: 700;
+      cursor: pointer; transition: background .2s;
+    }
+    .modal-upload-btn:hover { background: var(--green-mid); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .card { width: 140px; }
+      .card.tier-1 { width: 160px; }
+      .card.tier-2 { width: 148px; }
+      .tier-row { gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo-placeholder" id="logoWrap" title="Klik untuk muat naik logo IKRAM">
+      <span>📎<br>Logo<br>IKRAM</span>
+    </div>
+    <input type="file" class="logo-upload-input" id="logoInput" accept="image/*">
+    <h1>Jawatankuasa Pertubuhan IKRAM Malaysia<br>Kawasan Serdang</h1>
+    <span class="sesi-badge">Sesi 2026 – 2028</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- TIER 1: Yang Di-Pertua -->
+  <div class="section-label">Kepimpinan Utama</div>
+  <div class="tier">
+    <div class="tier-row">
+      <div class="card tier-1" onclick="openModal(this)" data-name="Tuan Abdullah bin Zainul Abidin" data-role="Yang Di-Pertua Kawasan" data-dept="">
+        <div class="photo-wrap"><span class="icon">👤</span><span class="photo-hint">Foto</span></div>
+        <div class="card-role">Yang Di-Pertua</div>
+        <div class="card-name">Tuan Abdullah bin Zainul Abidin</div>
+        <div class="card-contacts">
+          <div class="contact-item"><span class="ci-icon">✉️</span><span class="ci-text">emel@ikram.my</span></div>
+          <div class="contact-item"><span class="ci-icon">📞</span><span class="ci-text">+60 XX-XXX XXXX</span></div>
+          <div class="contact-item"><span class="ci-icon">📱</span><span class="ci-text">@username</span></div>
+        </div>
+        <input type="file" class="photo-upload" accept="image/*">
+      </div>
+    </div>
+
+    <!-- connector down -->
+    <div class="connector-v" style="height:28px; margin-top:2px;"></div>
+
+    <!-- TIER 2: Timbalan -->
+    <div class="tier-row two-col">
+      <div class="card tier-2" onclick="openModal(this)" data-name="Tuan Hasmin Hakim Bin Abdullah" data-role="Timbalan Yang Di-Pertua" data-dept="">
+        <div class="photo-wrap"><span class="icon">👤</span><span class="photo-hint">Foto</span></div>
+        <div class="card-role">Timbalan YDP</div>
+        <div class="card-name">Tuan Hasmin Hakim Bin Abdullah</div>
+        <div class="card-contacts">
+          <div class="contact-item"><span class="ci-icon">✉️</span><span class="ci-text">emel@ikram.my</span></div>
+          <div class="contact-item"><span class="ci-icon">📞</span><span class="ci-text">+60 XX-XXX XXXX</span></div>
+          <div class="contact-item"><span class="ci-icon">📱</span><span class="ci-text">@username</span></div>
+        </div>
+        <input type="file" class="photo-upload" accept="image/*">
+      </div>
+    </div>
+
+    <!-- connector down -->
+    <div class="connector-v" style="height:28px;"></div>
+
+    <!-- TIER 3: Exco Utama (Setiausaha & Bendahari) -->
+    <div class="tier-row two-col">
+      <div class="card tier-3" onclick="openModal(this)" data-name="Tuan Awang Ilham Bin Awang Keri" data-role="Setiausaha" data-dept="">
+        <div class="photo-wrap"><span class="icon">👤</span><span class="photo-hint">Foto</span></div>
+        <div class="card-role">Setiausaha</div>
+        <div class="card-name">Tuan Awang Ilham Bin Awang Keri</div>
+        <div class="card-contacts">
+          <div class="contact-item"><span class="ci-icon">✉️</span><span class="ci-text">emel@ikram.my</span></div>
+          <div class="contact-item"><span class="ci-icon">📞</span><span class="ci-text">+60 XX-XXX XXXX</span></div>
+          <div class="contact-item"><span class="ci-icon">📱</span><span class="ci-text">@username</span></div>
+        </div>
+        <input type="file" class="photo-upload" accept="image/*">
+      </div>
+      <div class="card tier-3" onclick="openModal(this)" data-name="Dr Mohd Hafif Samsudin" data-role="Bendahari" data-dept="">
+        <div class="photo-wrap"><span class="icon">👤</span><span class="photo-hint">Foto</span></div>
+        <div class="card-role">Bendahari</div>
+        <div class="card-name">Dr Mohd Hafif Samsudin</div>
+        <div class="card-contacts">
+          <div class="contact-item"><span class="ci-icon">✉️</span><span class="ci-text">emel@ikram.my</span></div>
+          <div class="contact-item"><span class="ci-icon">📞</span><span class="ci-text">+60 XX-XXX XXXX</span></div>
+          <div class="contact-item"><span class="ci-icon">📱</span><span class="ci-text">@username</span></div>
+        </div>
+        <input type="file" class="photo-upload" accept="image/*">
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- BAHAGIAN KHAS: Wanita & Muda -->
+  <div class="tier">
+    <div class="tier-row two-col">
+      <div class="card tier-dept" onclick="openModal(this)" data-name="Puan Aida Binti Abdul Rahim" data-role="Ketua Wanita IKRAM Serdang" data-dept="Wanita IKRAM">
+        <div class="photo-wrap"><span class="icon">👤</span><span class="photo-hint">Foto</span></div>
+        <div class="card-role">Ketua</div>
+        <div class="card-name">Puan Aida Binti Abdul Rahim</div>
+        <div class="dept-badge">Wanita IKRAM Serdang</div>
+        <div class="card-contacts">
+          <div class="contact-item"><span class="ci-icon">✉️</span><span class="ci-text">emel@ikram.my</span></div>
+          <div class="contact-item"><span class="ci-icon">📞</span><span class="ci-text">+60 XX-XXX XXXX</span></div>
+          <div class="contact-item"><span class="ci-icon">📱</span><span class="ci-text">@username</span></div>
+        </div>
+        <input type="file" class="photo-upload" accept="image/*">
+      </div>
+      <div class="card tier-dept" onclick="openModal(this)" data-name="Tuan Khairul Najmi bin Ainal Idham" data-role="Ketua IKRAM Muda Serdang" data-dept="IKRAM Muda">
+        <div class="photo-wrap"><span class="icon">👤</span><span class="photo-hint">Foto</span></div>
+        <div class="card-role">Ketua</div>
+        <div class="card-name">Tuan Khairul Najmi bin Ainal Idham</div>
+        <div class="dept-badge">IKRAM Muda Serdang</div>
+        <div class="card-contacts">
+          <div class="contact-item"><span class="ci-icon">✉️</span><span class="ci-text">emel@ikram.my</span></div>
+          <div class="contact-item"><span class="ci-icon">📞</span><span class="ci-text">+60 XX-XXX XXXX</span></div>
+          <div class="contact-item"><span class="ci-icon">📱</span><span class="ci-text">@username</span></div>
+        </div>
+        <input type="file" class="photo-upload" accept="image/*">
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- PORTFOLIO / BIRO -->
+  <div class="section-label">Ahli Jawatankuasa & Portfolio</div>
+  <div class="tier">
+    <div class="tier-row multi">
+
+      <!-- DAU -->
+      <div class="card tier-dept" onclick="openModal(this)" data-name="Tuan Juhari Bin Hassan" data-role="Ahli Jawatankuasa" data-dept="Dakwah Akar Umbi (DAU)">
+        <div class="photo-wrap"><span class="icon">👤</span><span class="photo-hint">Foto</span></div>
+        <div class="card-role">AJK</div>
+        <div class="card-name">Tuan Juhari Bin Hassan</div>
+        <div class="dept-badge">DAU</div>
+        <div class="card-contacts">
+          <div class="contact-item"><span class="ci-icon">✉️</span><span class="ci-text">emel@ikram.my</span></div>
+          <div class="contact-item"><span class="ci-icon">📞</span><span class="ci-text">+60 XX-XXX XXXX</span></div>
+          <div class="contact-item"><span class="ci-icon">📱</span><span class="ci-text">@username</span></div>
+        </div>
+        <input type="file" class="photo-upload" accept="image/*">
+      </div>
+
+      <!-- HEMA -->
+      <div class="card tier-dept" onclick="openModal(this)" data-name="Dr Sharafiz Bin Abdul Rahim" data-role="Ahli Jawatankuasa" data-dept="Hal Ehwal Mahasiswa (HEMA)">
+        <div class="photo-wrap"><span class="icon">👤</span><span class="photo-hint">Foto</span></div>
+        <div class="card-role">AJK</div>
+        <div class="card-name">Dr Sharafiz Bin Abdul Rahim</div>
+        <div class="dept-badge">HEMA</div>
+        <div class="card-contacts">
+          <div class="contact-item"><span class="ci-icon">✉️</span><span class="ci-text">emel@ikram.my</span></div>
+          <div class="contact-item"><span class="ci-icon">📞</span><span class="ci-text">+60 XX-XXX XXXX</span></div>
+          <div class="contact-item"><span class="ci-icon">📱</span><span class="ci-text">@username</span></div>
+        </div>
+        <input type="file" class="photo-upload" accept="image/*">
+      </div>
+
+      <!-- IKRAM Teens 1 -->
+      <div class="card tier-dept" onclick="openModal(this)" data-name="Cik Aida Afrina Binti Abdullah" data-role="Ahli Jawatankuasa" data-dept="IKRAM Teens">
+        <div class="photo-wrap"><span class="icon">👤</span><span class="photo-hint">Foto</span></div>
+        <div class="card-role">AJK</div>
+        <div class="card-name">Cik Aida Afrina Binti Abdullah</div>
+        <div class="dept-badge">IKRAM Teens</div>
+        <div class="card-contacts">
+          <div class="contact-item"><span class="ci-icon">✉️</span><span class="ci-text">emel@ikram.my</span></div>
+          <div class="contact-item"><span class="ci-icon">📞</span><span class="ci-text">+60 XX-XXX XXXX</span></div>
+          <div class="contact-item"><span class="ci-icon">📱</span><span class="ci-text">@username</span></div>
+        </div>
+        <input type="file" class="photo-upload" accept="image/*">
+      </div>
+
+      <!-- IKRAM Teens 2 -->
+      <div class="card tier-dept" onclick="openModal(this)" data-name="Tuan Khairul Naim Bin Khairul Anuar" data-role="Ahli Jawatankuasa" data-dept="IKRAM Teens">
+        <div class="photo-wrap"><span class="icon">👤</span><span class="photo-hint">Foto</span></div>
+        <div class="card-role">AJK</div>
+        <div class="card-name">Tuan Khairul Naim Bin Khairul Anuar</div>
+        <div class="dept-badge">IKRAM Teens</div>
+        <div class="card-contacts">
+          <div class="contact-item"><span class="ci-icon">✉️</span><span class="ci-text">emel@ikram.my</span></div>
+          <div class="contact-item"><span class="ci-icon">📞</span><span class="ci-text">+60 XX-XXX XXXX</span></div>
+          <div class="contact-item"><span class="ci-icon">📱</span><span class="ci-text">@username</span></div>
+        </div>
+        <input type="file" class="photo-upload" accept="image/*">
+      </div>
+
+      <!-- Media -->
+      <div class="card tier-dept" onclick="openModal(this)" data-name="Tuan Nor Hasif Bin Othman" data-role="Ahli Jawatankuasa" data-dept="Media">
+        <div class="photo-wrap"><span class="icon">👤</span><span class="photo-hint">Foto</span></div>
+        <div class="card-role">AJK</div>
+        <div class="card-name">Tuan Nor Hasif Bin Othman</div>
+        <div class="dept-badge">Media</div>
+        <div class="card-contacts">
+          <div class="contact-item"><span class="ci-icon">✉️</span><span class="ci-text">emel@ikram.my</span></div>
+          <div class="contact-item"><span class="ci-icon">📞</span><span class="ci-text">+60 XX-XXX XXXX</span></div>
+          <div class="contact-item"><span class="ci-icon">📱</span><span class="ci-text">@username</span></div>
+        </div>
+        <input type="file" class="photo-upload" accept="image/*">
+      </div>
+
+      <!-- Kebajikan 1 -->
+      <div class="card tier-dept" onclick="openModal(this)" data-name="Puan Hjh Normah Binti Mohd Noor" data-role="Ahli Jawatankuasa" data-dept="Kebajikan">
+        <div class="photo-wrap"><span class="icon">👤</span><span class="photo-hint">Foto</span></div>
+        <div class="card-role">AJK</div>
+        <div class="card-name">Puan Hjh Normah Binti Mohd Noor</div>
+        <div class="dept-badge">Kebajikan</div>
+        <div class="card-contacts">
+          <div class="contact-item"><span class="ci-icon">✉️</span><span class="ci-text">emel@ikram.my</span></div>
+          <div class="contact-item"><span class="ci-icon">📞</span><span class="ci-text">+60 XX-XXX XXXX</span></div>
+          <div class="contact-item"><span class="ci-icon">📱</span><span class="ci-text">@username</span></div>
+        </div>
+        <input type="file" class="photo-upload" accept="image/*">
+      </div>
+
+      <!-- Kebajikan 2 -->
+      <div class="card tier-dept" onclick="openModal(this)" data-name="Puan Sarah Binti Azmin" data-role="Ahli Jawatankuasa" data-dept="Kebajikan">
+        <div class="photo-wrap"><span class="icon">👤</span><span class="photo-hint">Foto</span></div>
+        <div class="card-role">AJK</div>
+        <div class="card-name">Puan Sarah Binti Azmin</div>
+        <div class="dept-badge">Kebajikan</div>
+        <div class="card-contacts">
+          <div class="contact-item"><span class="ci-icon">✉️</span><span class="ci-text">emel@ikram.my</span></div>
+          <div class="contact-item"><span class="ci-icon">📞</span><span class="ci-text">+60 XX-XXX XXXX</span></div>
+          <div class="contact-item"><span class="ci-icon">📱</span><span class="ci-text">@username</span></div>
+        </div>
+        <input type="file" class="photo-upload" accept="image/*">
+      </div>
+
+    </div>
+  </div>
+
+
+</main>
+
+<footer>
+  Jawatankuasa Pertubuhan IKRAM Malaysia Kawasan Serdang &nbsp;|&nbsp; Sesi 2026–2028<br>
+  <span style="color:var(--green-mid); font-style:italic; font-size:10px;">Klik pada kad untuk muat naik gambar profil</span>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-backdrop" id="modalBackdrop" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    <div class="modal-photo" id="modalPhoto"><span>👤</span></div>
+    <div class="modal-role" id="modalRole"></div>
+    <div class="modal-name" id="modalName"></div>
+    <div class="modal-dept" id="modalDept" style="display:none"></div>
+    <br>
+    <button class="modal-upload-btn" id="modalUploadBtn">📷 Muat Naik Foto</button>
+    <input type="file" id="modalFileInput" accept="image/*" style="display:none">
+  </div>
+</div>
+
+<script>
+  // ── Logo upload ──
+  const logoWrap = document.getElementById('logoWrap');
+  const logoInput = document.getElementById('logoInput');
+  logoWrap.addEventListener('click', () => logoInput.click());
+  logoInput.addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      logoWrap.innerHTML = `<img src="${ev.target.result}" alt="Logo IKRAM">`;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // ── Modal logic ──
+  let activeCard = null;
+
+  function openModal(card) {
+    activeCard = card;
+    const name = card.dataset.name;
+    const role = card.dataset.role;
+    const dept = card.dataset.dept;
+
+    document.getElementById('modalName').textContent = name;
+    document.getElementById('modalRole').textContent = role;
+
+    const deptEl = document.getElementById('modalDept');
+    if (dept) {
+      deptEl.textContent = dept;
+      deptEl.style.display = 'inline-block';
+    } else {
+      deptEl.style.display = 'none';
+    }
+
+    // Mirror current photo
+    const photoWrap = card.querySelector('.photo-wrap');
+    const existingImg = photoWrap.querySelector('img');
+    const modalPhoto = document.getElementById('modalPhoto');
+    if (existingImg) {
+      modalPhoto.innerHTML = `<img src="${existingImg.src}" alt="${name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+    } else {
+      modalPhoto.innerHTML = '<span>👤</span>';
+    }
+
+    document.getElementById('modalBackdrop').classList.add('open');
+  }
+
+  function closeModal(e) {
+    if (e.target === document.getElementById('modalBackdrop')) closeModalDirect();
+  }
+
+  function closeModalDirect() {
+    document.getElementById('modalBackdrop').classList.remove('open');
+    activeCard = null;
+  }
+
+  // Modal file upload
+  document.getElementById('modalUploadBtn').addEventListener('click', () => {
+    document.getElementById('modalFileInput').click();
+  });
+
+  document.getElementById('modalFileInput').addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file || !activeCard) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const src = ev.target.result;
+      // Update card photo
+      const photoWrap = activeCard.querySelector('.photo-wrap');
+      photoWrap.innerHTML = `<img src="${src}" alt="foto">`;
+      // Update modal photo
+      document.getElementById('modalPhoto').innerHTML =
+        `<img src="${src}" alt="foto" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+    };
+    reader.readAsDataURL(file);
+    e.target.value = '';
+  });
+
+  // Keyboard close
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModalDirect();
+  });
+</script>
+
+</body>
+</html>
